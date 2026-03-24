@@ -37,10 +37,12 @@ class WordModel(Model):
             for parola in parole:
                 if parola in self.positive and parola in self.negative:
                     score = self.positive[parola]-self.negative[parola]
-                    if score > 0:
-                        valutazione+=1
-                    elif score < 0:
-                        valutazione-=1
+                    totali = self.positive[parola]-self.negative[parola]
+                    if (score/totali>0.1):
+                        if score > 0:
+                            valutazione+=1
+                        elif score < 0:
+                            valutazione-=1
                 elif parola in self.positive:
                     valutazione+=1
                 elif parola in self.negative:
