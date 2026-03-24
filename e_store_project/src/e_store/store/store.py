@@ -13,6 +13,7 @@ class Store:
             item_data = self.inventory.get_items()[item_name]
             total_price = item_data['item'].get_price() * quantity
             if customer.purchase(total_price) and self.inventory.remove_item(item_name, quantity):
+                customer.add_item(item_name,quantity)
                 self.balance += total_price
                 return True
         return False
