@@ -79,8 +79,8 @@ def get_item_information(item: str) -> ItemInfo:
     valore = store.inventory.get_items()[item]
     return ItemInfo(name = item, quantity=valore["quantity"],price=valore["item"].get_price())
     
-@app.get("/balance")
-def get_balance(username: str) ->UserBalance:
+@app.get("/user/{username}/balance")
+def get_balance(username: str) -> UserBalance:
     if username not in users:
         raise HTTPException(status_code=404, detail=f"Utente {username} non trovato")
     customer = users[username]
@@ -97,7 +97,7 @@ def purchase(purchase_req: PurchaseRequest)->PurchaseResponse:
     
     if (store.sell_item(users[nome],purchase_req.item_name,purchase_req.quantity)):
         return PurchaseResponse(success= True,message="acquisto effettuato",new_balance=users[nome].balance)
-    elif (users[nome].balance < store.inventory.get_items()[purchase_req.item_name].get_price()*purchase_req.quantity):
+    elif (users[nome].balance < store.inventory.get_items()[purchase_req.item_name]["item"].get_price()*purchase_req.quantity):
         return PurchaseResponse(success=False,message=f"credito insufficiente: {users[nome].balance}")
     else:
         return PurchaseResponse(success=False,message="oggetti non disponibili")
